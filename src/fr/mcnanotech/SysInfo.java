@@ -18,7 +18,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = "sysinfo", name = "System Information", version = "1.0.1")
+@Mod(modid = "sysinfo", name = "System Information", version = "1.0.2")
 public class SysInfo
 {
 	@EventHandler
@@ -61,17 +61,16 @@ public class SysInfo
 		{
 			executeCommand(info, "ps -eH");
 			executeCommand(info, "free");
+			executeCommand(info, "cat /proc/cpuinfo");
 		}
 		info.add("--- SysInfo finish ---");
 		
 		File sysInfoDir = new File(".", "SysInfo");
 		sysInfoDir.mkdirs();
-		System.out.println(sysInfoDir.getAbsolutePath());
 		Date date = new Date();
 		DateFormat shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 		String fileName = shortDateFormat.format(date).replace('/', '.').replace(' ', '-').replace(':', '.') + ".txt";
 		File target = new File(sysInfoDir, fileName);
-		System.out.println(target.getAbsolutePath());
 		try
 		{
 			target.createNewFile();
