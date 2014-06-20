@@ -14,12 +14,11 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import net.minecraft.util.Util;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = "sysinfo", name = "System Information", version = "1.0.0")
+@Mod(modid = "sysinfo", name = "System Information", version = "1.0.1")
 public class SysInfo
 {
 	@EventHandler
@@ -54,11 +53,11 @@ public class SysInfo
 		}
 
 		info.add("--- System information ---");
-		if(Util.getOSType() == Util.EnumOS.WINDOWS)
+		if(getOSType() == EnumOS.WINDOWS)
 		{
 			executeCommand(info, "SYSTEMINFO");
 		}
-		else if(Util.getOSType() == Util.EnumOS.LINUX)
+		else if(getOSType() == EnumOS.LINUX)
 		{
 			executeCommand(info, "ps -eH");
 			executeCommand(info, "free");
@@ -137,4 +136,19 @@ public class SysInfo
 
         return String.format("%d total; %s", new Object[] {Integer.valueOf(i), stringbuilder.toString()});
 	}
+	
+    private EnumOS getOSType()
+    {
+        String s = System.getProperty("os.name").toLowerCase();
+        return s.contains("win") ? EnumOS.WINDOWS : (s.contains("mac") ? EnumOS.MACOS : (s.contains("solaris") ? EnumOS.SOLARIS : (s.contains("sunos") ? EnumOS.SOLARIS : (s.contains("linux") ? EnumOS.LINUX : (s.contains("unix") ? EnumOS.LINUX : EnumOS.UNKNOWN)))));
+    }
+    
+    private enum EnumOS
+    {
+        LINUX,
+        SOLARIS,
+        WINDOWS,
+        MACOS,
+        UNKNOWN;
+    }
 }
