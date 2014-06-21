@@ -1,4 +1,4 @@
-package fr.mcnanotech;
+package fr.mcnanotech.sysinfo;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -18,7 +18,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = "sysinfo", name = "System Information", version = "1.0.2")
+@Mod(modid = "sysinfo", name = "System Information", version = "1.0.3")
 public class SysInfo
 {
 	@EventHandler
@@ -56,6 +56,7 @@ public class SysInfo
 		if(getOSType() == EnumOS.WINDOWS)
 		{
 			executeCommand(info, "SYSTEMINFO");
+			executeCommand(info, "tasklist.exe /fo csv /nh");
 		}
 		else if(getOSType() == EnumOS.LINUX)
 		{
