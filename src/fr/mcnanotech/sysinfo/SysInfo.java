@@ -92,26 +92,6 @@ public class SysInfo
 		{
 			e.printStackTrace();
 		}
-
-		try
-		{
-			if(event.getSide() == Side.CLIENT)
-			{
-				upload(target, "clients/");
-			}
-			else
-			{
-				upload(target, "servers/");
-			}
-		}
-		catch(SocketException e)
-		{
-			e.printStackTrace();
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
 	}
 
 	private ArrayList<String> executeCommand(ArrayList<String> list, String command)
@@ -171,23 +151,5 @@ public class SysInfo
 	private enum EnumOS
 	{
 		LINUX, SOLARIS, WINDOWS, MACOS, UNKNOWN;
-	}
-
-	public static void upload(File file, String folder) throws SocketException, IOException
-	{
-		FTPClient client_ftp = new FTPClient();
-
-		FileInputStream f_stream = null;
-
-		client_ftp.connect("mcnanotech.fr");
-		client_ftp.login("@@@@@@@@", "********");
-
-		String fichier = file.getAbsolutePath();
-		f_stream = new FileInputStream(fichier);
-
-		client_ftp.storeFile("/" + folder + file.getName(), f_stream);
-
-		client_ftp.logout();
-		f_stream.close();
 	}
 }
