@@ -18,7 +18,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = "sysinfo", name = "System Information", version = "1.0.3")
+@Mod(modid = "sysinfo", name = "System Information", version = "1.0.4")
 public class SysInfo
 {
 	@EventHandler
@@ -53,16 +53,17 @@ public class SysInfo
 		}
 
 		info.add("--- System information ---");
-		if(getOSType() == EnumOS.WINDOWS)
+		if(getOSType() == EnumOS.LINUX)
+		{
+			executeCommand(info, "uname -a");
+			executeCommand(info, "ps aux");
+			executeCommand(info, "free -m");
+			executeCommand(info, "cat /proc/cpuinfo");
+		}
+		else if(getOSType() == EnumOS.WINDOWS)
 		{
 			executeCommand(info, "SYSTEMINFO");
 			executeCommand(info, "tasklist.exe /fo csv /nh");
-		}
-		else if(getOSType() == EnumOS.LINUX)
-		{
-			executeCommand(info, "ps -eH");
-			executeCommand(info, "free");
-			executeCommand(info, "cat /proc/cpuinfo");
 		}
 		info.add("--- SysInfo finish ---");
 		
@@ -87,6 +88,7 @@ public class SysInfo
 		{
 			e.printStackTrace();
 		}
+		info.clear();
 	}
 
 	private ArrayList<String> executeCommand(ArrayList<String> list, String command)
