@@ -3,20 +3,25 @@ package fr.mcnanotech.sysinfo;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
+import java.net.SocketException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.net.ftp.FTPClient;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = "sysinfo", name = "System Information", version = "1.0.4")
 public class SysInfo
@@ -41,7 +46,7 @@ public class SysInfo
 
 		info.add("--- JVM arg ---");
 		info.add(getJVMFlag());
-		
+
 		info.add("--- Disk information ---");
 		File[] roots = File.listRoots();
 		for(File root : roots)
@@ -66,7 +71,7 @@ public class SysInfo
 			executeCommand(info, "tasklist.exe /fo csv /nh");
 		}
 		info.add("--- SysInfo finish ---");
-		
+
 		File sysInfoDir = new File(".", "SysInfo");
 		sysInfoDir.mkdirs();
 		Date date = new Date();
@@ -112,45 +117,41 @@ public class SysInfo
 		}
 		return list;
 	}
-	
+
 	private String getJVMFlag()
 	{
-        RuntimeMXBean runtimemxbean = ManagementFactory.getRuntimeMXBean();
-        List list = runtimemxbean.getInputArguments();
-        int i = 0;
-        StringBuilder stringbuilder = new StringBuilder();
-        Iterator iterator = list.iterator();
+		RuntimeMXBean runtimemxbean = ManagementFactory.getRuntimeMXBean();
+		List list = runtimemxbean.getInputArguments();
+		int i = 0;
+		StringBuilder stringbuilder = new StringBuilder();
+		Iterator iterator = list.iterator();
 
-        while (iterator.hasNext())
-        {
-            String s = (String)iterator.next();
+		while(iterator.hasNext())
+		{
+			String s = (String)iterator.next();
 
-            if (s.startsWith("-X"))
-            {
-                if (i++ > 0)
-                {
-                    stringbuilder.append(" ");
-                }
+			if(s.startsWith("-X"))
+			{
+				if(i++ > 0)
+				{
+					stringbuilder.append(" ");
+				}
 
-                stringbuilder.append(s);
-            }
-        }
+				stringbuilder.append(s);
+			}
+		}
 
-        return String.format("%d total; %s", new Object[] {Integer.valueOf(i), stringbuilder.toString()});
+		return String.format("%d total; %s", new Object[] {Integer.valueOf(i), stringbuilder.toString()});
 	}
-	
-    private EnumOS getOSType()
-    {
-        String s = System.getProperty("os.name").toLowerCase();
-        return s.contains("win") ? EnumOS.WINDOWS : (s.contains("mac") ? EnumOS.MACOS : (s.contains("solaris") ? EnumOS.SOLARIS : (s.contains("sunos") ? EnumOS.SOLARIS : (s.contains("linux") ? EnumOS.LINUX : (s.contains("unix") ? EnumOS.LINUX : EnumOS.UNKNOWN)))));
-    }
-    
-    private enum EnumOS
-    {
-        LINUX,
-        SOLARIS,
-        WINDOWS,
-        MACOS,
-        UNKNOWN;
-    }
+
+	private EnumOS getOSType()
+	{
+		String s = System.getProperty("os.name").toLowerCase();
+		return s.contains("win") ? EnumOS.WINDOWS : (s.contains("mac") ? EnumOS.MACOS : (s.contains("solaris") ? EnumOS.SOLARIS : (s.contains("sunos") ? EnumOS.SOLARIS : (s.contains("linux") ? EnumOS.LINUX : (s.contains("unix") ? EnumOS.LINUX : EnumOS.UNKNOWN)))));
+	}
+
+	private enum EnumOS
+	{
+		LINUX, SOLARIS, WINDOWS, MACOS, UNKNOWN;
+	}
 }
